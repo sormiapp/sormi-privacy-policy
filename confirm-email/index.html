@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Confirm your Sormi email</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<main>
+<div id="none"><h1>Confirm your Sormi email</h1><p>Open the link in your Sormi confirmation email to finish creating your account.</p></div>
+<div id="ok" hidden><h1>Email confirmed</h1><p>On the phone where Sormi is installed, tap Open Sormi to sign in.</p><a class="button" id="open" href="#">Open Sormi</a><p class="muted">On a computer? Your account is ready. On your phone, open Sormi, go to Profile, choose Continue with email and sign in with your email and password.</p></div>
+<div id="expired" hidden><h1>This link has expired</h1><p>Each link works once, for a limited time. In Sormi, create your account again from Continue with email to get a new one.</p></div>
+<nav aria-label="Related pages"><a href="../">Sormi</a> · <a href="../support/">Support</a></nav>
+</main>
+<script>
+// Supabase sends the email's link here with the sign-in in the fragment (#access_token=…) or, in
+// the PKCE flow, the query (?code=…); a used or expired link brings #error=…. The page hands that
+// on to the app's confirm-email route and takes it out of the address bar. The fragment never reaches
+// this site's server.
+(function () {
+  var fragment = location.hash.slice(1);
+  var query = location.search.slice(1);
+  var params = new URLSearchParams(fragment || query);
+  if (fragment || query) history.replaceState(null, '', location.pathname);
+  var show = function (id) { document.getElementById(id).hidden = false; document.getElementById('none').hidden = true; };
+  if (params.get('error') || params.get('error_code')) return show('expired');
+  if (params.get('access_token') || params.get('code')) {
+    document.getElementById('open').href = 'sormi://confirm-email' + (fragment ? '#' + fragment : '?' + query);
+    return show('ok');
+  }
+})();
+</script>
+</body>
+</html>

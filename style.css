@@ -7,3 +7,6 @@ ul{padding-left:22px}
 a{color:#1D3A2E;text-decoration:underline}
 .muted{color:#4E5E54}
 nav { margin-top: 2rem; }
+.button{display:inline-block;background:#1D3A2E;color:#F4EFE3;text-decoration:none;font-weight:700;padding:14px 22px;border-radius:12px;margin:8px 0 20px}
+.button:focus-visible{outline:3px solid #B5701F;outline-offset:2px}
+[hidden]{display:none!important}

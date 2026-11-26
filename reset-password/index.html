@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Reset your Sormi password</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<main>
+<div id="none"><h1>Reset your Sormi password</h1><p>Open the link in your Sormi password reset email to choose a new password.</p></div>
+<div id="ok" hidden><h1>Choose a new password in Sormi</h1><p>On the phone where Sormi is installed, tap Open Sormi to set your new password.</p><a class="button" id="open" href="#">Open Sormi</a><p class="muted">On a computer? Passwords are changed in the app. Open the reset email on your phone instead.</p></div>
+<div id="expired" hidden><h1>This link has expired</h1><p>Each link works once, for a limited time. In Sormi, ask for a new one from Continue with email and Forgot password?.</p></div>
+<nav aria-label="Related pages"><a href="../">Sormi</a> · <a href="../support/">Support</a></nav>
+</main>
+<script>
+// Supabase sends the email's link here with the sign-in in the fragment (#access_token=…) or, in
+// the PKCE flow, the query (?code=…); a used or expired link brings #error=…. The page hands that
+// on to the app's reset-password route and takes it out of the address bar. The fragment never reaches
+// this site's server.
+(function () {
+  var fragment = location.hash.slice(1);
+  var query = location.search.slice(1);
+  var params = new URLSearchParams(fragment || query);
+  if (fragment || query) history.replaceState(null, '', location.pathname);
+  var show = function (id) { document.getElementById(id).hidden = false; document.getElementById('none').hidden = true; };
+  if (params.get('error') || params.get('error_code')) return show('expired');
+  if (params.get('access_token') || params.get('code')) {
+    document.getElementById('open').href = 'sormi://reset-password' + (fragment ? '#' + fragment : '?' + query);
+    return show('ok');
+  }
+})();
+</script>
+</body>
+</html>
